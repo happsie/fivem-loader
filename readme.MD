@@ -22,7 +22,7 @@ fivem-loader help
 fivem-loader setup --server-data-path C:\Users\fivem\server-data
 ``` 
 * **Installing a script**
-This will download the **master** branch as a zip and extract them into `[local]`. Make sure the repository is set to public and is following the [supported structure](#Compatible-repositories)
+This will download the **master** branch as a zip and extract them into `[local]`. Make sure the repository is set to public and is following the [supported project structure](#Compatible-repositories)
 ```
 fivem-loader load --github https://github.com/happsie/fivem-hello-world --script-name hello_world
 ```
