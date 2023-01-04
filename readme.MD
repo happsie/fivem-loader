@@ -5,7 +5,7 @@
     🚨Work in progress developing an UI and enhancing the command-line tool🚨
 </p>
 
-## Release
+## 🖥️ Download
 [Go to releases](https://github.com/happsie/fivem-loader/releases)
 
 ## ✨ Features
