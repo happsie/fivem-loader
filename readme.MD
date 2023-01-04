@@ -1,5 +1,5 @@
 <p align="center">
-    🌟FiveM Resource Loader - A fast way to install FiveM scripts from github  🌟  
+    🌟FiveM Resource Loader - A fast way to install FiveM scripts from Github  🌟  
 </p>
 <p align="center">
     🚨Work in progress developing an UI and enhancing the command-line tool🚨
@@ -22,7 +22,7 @@ fivem-loader help
 fivem-loader setup --server-data-path C:\Users\fivem\server-data
 ``` 
 * **Load a new script**  
-This will download the **master** branch as a zip and extract them into `[local]`. Make sure the repository is set to public and is following the [supported project structure](#Compatible-repositories)  
+This will download the **master** branch as a zip and extract them into selected resource destination. Make sure the repository is set to public and is following the [supported project structure](#Compatible-repositories)  
 Use `--skip-cfg` to skip making changes to your `server.cfg`
 ```
 fivem-loader load --github https://github.com/happsie/fivem-hello-world --script-name hello_world
