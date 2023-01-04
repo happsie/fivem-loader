@@ -2,8 +2,8 @@ package updater
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -22,10 +22,10 @@ func Unzip(resourceTargetDirectory, scriptName, zipName string) error {
 			folderName = f.Name
 		}
 		filePath := filepath.Join(resourceTargetDirectory, f.Name)
-		log.Printf("unzipping file %s\n", filePath)
+		fmt.Printf("unzipping file %s\n", filePath)
 
 		if f.FileInfo().IsDir() {
-			log.Printf("creating directory %s", filePath)
+			fmt.Printf("creating directory %s", filePath)
 			err = os.MkdirAll(filePath, os.ModePerm)
 			if err != nil {
 				return err

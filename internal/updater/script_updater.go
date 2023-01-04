@@ -3,7 +3,11 @@ package updater
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
+
+	"github.com/happsie/fivem-loader/internal/setup"
+	"github.com/thoas/go-funk"
 )
 
 const comment = "# FiveM-Loader scripts"
@@ -12,19 +16,46 @@ type ScriptUpdater struct {
 	ServerDataPath string
 }
 
-func (su *ScriptUpdater) Update(scriptName, url string) error {
+// Update takes scriptName (name of the script), url (github url) and destination folder (the resource folder to place the script in e.g [local])
+func (su *ScriptUpdater) Update(scriptName, url, destinationFolder string, skipConfig bool) error {
 	if su.ServerDataPath == "" {
 		return fmt.Errorf("server data path not setup, try setting it up before loading scripts")
+	}
+	conf, err := setup.LoadConfig()
+	if err != nil {
+		return err
+	}
+	alreadyInstalled := funk.Contains(conf.InstalledScripts, func(is setup.InstalledScript) bool {
+		return is.Name == scriptName && strings.Contains(is.Location, destinationFolder)
+	})
+	if alreadyInstalled {
+		return fmt.Errorf("script already installed with name %s", scriptName)
 	}
 	zipName, err := DownloadZip(getGithubLink(url))
 	if err != nil {
 		return err
 	}
 	defer RemoveFile(zipName)
-	err = Unzip(su.getResourcesPath(), scriptName, zipName)
+	err = Unzip(su.getResourcesPath(destinationFolder), scriptName, zipName)
 	if err != nil {
 		return err
 	}
+	if skipConfig == false {
+		su.updateServerCfg(scriptName)
+	}
+	conf.InstalledScripts = append(conf.InstalledScripts, setup.InstalledScript{
+		Name:     scriptName,
+		Github:   url,
+		Location: filepath.Join(su.getResourcesPath(destinationFolder), scriptName),
+	})
+	err = conf.Save()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (su ScriptUpdater) updateServerCfg(scriptName string) error {
 	b, err := os.ReadFile(su.getCfgPath())
 	if err != nil {
 		return err
@@ -43,8 +74,8 @@ func (su *ScriptUpdater) Update(scriptName, url string) error {
 	return nil
 }
 
-func (su ScriptUpdater) getResourcesPath() string {
-	return fmt.Sprintf(`%s\resources\[local]\`, su.ServerDataPath)
+func (su ScriptUpdater) getResourcesPath(destinationFolder string) string {
+	return fmt.Sprintf(`%s\resources\%s\`, su.ServerDataPath, destinationFolder)
 }
 
 func (su ScriptUpdater) getCfgPath() string {

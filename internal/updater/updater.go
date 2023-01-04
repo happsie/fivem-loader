@@ -1,5 +1,5 @@
 package updater
 
 type Updater interface {
-	Update(name, url string) error
+	Update(name, url, destinationFolder string, skipConfig bool) error
 }

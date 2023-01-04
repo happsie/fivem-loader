@@ -3,7 +3,6 @@ package updater
 import (
 	"fmt"
 	"io"
-	"log"
 	"math/rand"
 	"net/http"
 	"os"
@@ -15,20 +14,20 @@ func DownloadZip(url string) (zipName string, err error) {
 	if err != nil {
 		return "", err
 	}
-	log.Printf("Download complete [%s]\n", url)
+	fmt.Printf("Download complete [%s]\n", url)
 	defer resp.Body.Close()
 	fileName := getFileName()
 	out, err := createZipFile(fileName)
 	if err != nil {
 		return "", err
 	}
-	log.Printf("Zipfile created [%s]\n", fileName)
+	fmt.Printf("Zipfile created [%s]\n", fileName)
 	defer out.Close()
 	err = copyToFile(out, resp.Body)
 	if err != nil {
 		return "", err
 	}
-	log.Printf("Content written to file [%s]\n", fileName)
+	fmt.Printf("Content written to file [%s]\n", fileName)
 	return fileName, nil
 }
 

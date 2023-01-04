@@ -9,11 +9,37 @@ import (
 	"path/filepath"
 )
 
+type InstalledScript struct {
+	Name     string `json:"name"`
+	Github   string `json:"github"`
+	Location string `json:"location"`
+}
+
 type Config struct {
-	ServerDataPath string `json:"serverDataPath"`
+	ServerDataPath   string            `json:"serverDataPath"`
+	InstalledScripts []InstalledScript `json:"installedScripts"`
 }
 
 const settingsFileName = "fivem-loader-settings.json"
+
+func (c *Config) Save() error {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+	settingsPath := filepath.Join(homeDir, settingsFileName)
+	f, err := os.OpenFile(settingsPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	jsonByte, err := json.Marshal(c)
+	if err != nil {
+		return err
+	}
+	_, err = f.WriteString(string(jsonByte))
+	return nil
+}
 
 func CreateConfig(path string) error {
 	if path == "" {
@@ -31,12 +57,12 @@ func CreateConfig(path string) error {
 	defer f.Close()
 	conf := Config{
 		ServerDataPath: path,
+		InstalledScripts: []InstalledScript{},
 	}
-	jsonByte, err := json.Marshal(conf)
+	err = conf.Save()
 	if err != nil {
 		return err
 	}
-	_, err = f.WriteString(string(jsonByte))
 	log.Println("config created")
 	return nil
 }

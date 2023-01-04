@@ -1,13 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
-	"strings"
 
+	"github.com/happsie/fivem-loader/internal/load"
 	"github.com/happsie/fivem-loader/internal/setup"
-	"github.com/happsie/fivem-loader/internal/updater"
 	"github.com/urfave/cli/v2"
 )
 
@@ -28,7 +26,7 @@ func main() {
 			},
 			{
 				Name:  "load",
-				Usage: "Loads script to [local] and ensures script in server.cfg",
+				Usage: "Loads script to selected resource and ensures script in server.cfg",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:     "github",
@@ -39,36 +37,47 @@ func main() {
 					&cli.StringFlag{
 						Name:     "script-name",
 						Aliases:  []string{"name", "sn"},
-						Usage:    "Name of the folder (script name) that will be created inside [local]. (example: hello_world)",
+						Usage:    "Name of the script that will also be used for creating the resource folder. (example: hello_world)",
+						Required: true,
+					},
+					&cli.BoolFlag{
+						Name:     "skip-cfg",
+						Aliases:  []string{"scfg"},
+						Usage:    "Skips addition to server.cfg",
+						Required: false,
+						Value:    false,
+					},
+				},
+				Action: load.Load(),
+			},
+			{
+				Name:   "loaded",
+				Usage:  "List loaded scripts by FiveM Loader",
+				Action: load.Loaded(),
+			},
+			{
+				Name:  "unload",
+				Usage: "unloads selected script",
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:     "script-name",
+						Aliases:  []string{"name", "sn"},
+						Usage:    "Script name to uninstall. (example: hello_world)",
 						Required: true,
 					},
 				},
-				Action: func(ctx *cli.Context) error {
-					scriptName := ctx.String("script-name")
-					if scriptName == "" {
-						return fmt.Errorf("script name cannot be empty")
-					}
-					github := ctx.String("github")
-					if github == "" && !strings.HasPrefix(github, "https://github.com") {
-						return fmt.Errorf("invalid github url")
-					}
-					config, err := setup.LoadConfig()
-					if err != nil {
-						return err
-					}
-					scriptUpdater := updater.ScriptUpdater{
-						ServerDataPath: config.ServerDataPath,
-					}
-					err = scriptUpdater.Update(scriptName, github)
-					if err != nil {
-						return err
-					}
-					log.Println("Script installation complete")
-					return nil
-				},
+				Action: load.Unload(),
 			},
 		},
 	}
+	app.Name = "FiveM-Loader"
+	app.Authors = []*cli.Author{
+		{
+			Name: "happsie",
+		},
+	}
+	app.Usage = "Fast and easy installation of scripts"
+	app.Description = "A cli application for installing FiveM scripts"
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
 	}

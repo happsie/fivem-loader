@@ -20,11 +20,10 @@
         }
     ]
 }
-
 /*
 "load",
-                "-g",
-                "https://github.com/happsie/fivem-hello-world",
-                "-sn",
-                "hello_world"
+"-g",
+"https://github.com/happsie/fivem-hello-world",
+"-sn",
+"hello_world"
 */
