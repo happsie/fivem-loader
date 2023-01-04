@@ -5,6 +5,9 @@
     🚨Work in progress developing an UI and enhancing the command-line tool🚨
 </p>
 
+## Release
+[Go to releases](https://github.com/happsie/fivem-loader/releases)
+
 ## ✨ Features
 * Download FiveM scripts from Github
 * Places the script in selected resource folder
