@@ -18,7 +18,7 @@ func Load() cli.ActionFunc {
 			return fmt.Errorf("script name cannot be empty")
 		}
 		github := ctx.String("github")
-		if github == "" && !strings.HasPrefix(github, "https://github.com") {
+		if github == "" || !strings.HasPrefix(github, "https://github.com") {
 			return fmt.Errorf("invalid github url")
 		}
 		config, err := setup.LoadConfig()
