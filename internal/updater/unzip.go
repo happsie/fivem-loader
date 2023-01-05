@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/happsie/fivem-loader/internal"
 )
 
 func Unzip(resourceTargetDirectory, scriptName, zipName string) error {
@@ -17,15 +19,14 @@ func Unzip(resourceTargetDirectory, scriptName, zipName string) error {
 	defer archive.Close()
 
 	folderName := ""
+	fmt.Printf(internal.InfoColor, fmt.Sprintf("Installing script [%s] to %s\n", scriptName, resourceTargetDirectory))
 	for _, f := range archive.File {
 		if f.FileInfo().IsDir() && folderName == "" && strings.HasSuffix(f.Name, "-master/") {
 			folderName = f.Name
 		}
 		filePath := filepath.Join(resourceTargetDirectory, f.Name)
-		fmt.Printf("unzipping file %s\n", filePath)
 
 		if f.FileInfo().IsDir() {
-			fmt.Printf("creating directory %s", filePath)
 			err = os.MkdirAll(filePath, os.ModePerm)
 			if err != nil {
 				return err
@@ -53,6 +54,10 @@ func Unzip(resourceTargetDirectory, scriptName, zipName string) error {
 
 		dstFile.Close()
 		fileInArchive.Close()
+	}
+	err = os.RemoveAll(filepath.Join(resourceTargetDirectory, scriptName))
+	if err != nil {
+		return err
 	}
 	if folderName != "" {
 		err = os.Rename(filepath.Join(resourceTargetDirectory, folderName), filepath.Join(resourceTargetDirectory, scriptName))

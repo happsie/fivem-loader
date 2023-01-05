@@ -4,8 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/happsie/fivem-loader/internal/load"
-	"github.com/happsie/fivem-loader/internal/setup"
+	"github.com/happsie/fivem-loader/cmd/ctl/cmd"
 	"github.com/urfave/cli/v2"
 )
 
@@ -22,7 +21,7 @@ func main() {
 						Required: true,
 					},
 				},
-				Action: setup.Setup(),
+				Action: cmd.Setup(),
 			},
 			{
 				Name:  "load",
@@ -48,12 +47,12 @@ func main() {
 						Value:    false,
 					},
 				},
-				Action: load.Load(),
+				Action: cmd.Load(),
 			},
 			{
 				Name:   "loaded",
 				Usage:  "List loaded scripts by FiveM Loader",
-				Action: load.Loaded(),
+				Action: cmd.Loaded(),
 			},
 			{
 				Name:  "unload",
@@ -66,7 +65,19 @@ func main() {
 						Required: true,
 					},
 				},
-				Action: load.Unload(),
+				Action: cmd.Unload(),
+			},
+			{
+				Name:  "update",
+				Usage: "Updates already installed script. If you do not specify a script name all scripts will be updated",
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:     "script-name",
+						Aliases:  []string{"sn"},
+						Required: false,
+					},
+				},
+				Action: cmd.Update(),
 			},
 		},
 	}
