@@ -57,7 +57,6 @@ The supported structure for repositories using this tool will be updated to supp
 ## 🚀Upcoming features
 * Web GUI for installing script
 * List of compatible scripts (easy click-install)
-* Automatic update of scripts (setting per script)
 * Allow private repositories
 * Custom addition to `server.cfg`
 
