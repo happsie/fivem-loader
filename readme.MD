@@ -30,7 +30,7 @@ Use `--skip-cfg` to skip making changes to your `server.cfg`
 ```
 load --url https://github.com/happsie/fivem-hello-world --script-name hello_world
 ```
-* **Load a new script (alternative source)**
+* **Load a new script (alternative source)**  
 This will download source and extract them into selected resource destination. The download must be a `.zip` file [supported project structure](#Compatible-repositories)  
 Use `--skip-cfg` to skip making changes to your `server.cfg`. See below example
 ```
