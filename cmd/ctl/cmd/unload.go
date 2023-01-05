@@ -1,10 +1,11 @@
-package load
+package cmd
 
 import (
 	"fmt"
 	"os"
 
-	"github.com/happsie/fivem-loader/internal/setup"
+	"github.com/happsie/fivem-loader/internal"
+	"github.com/happsie/fivem-loader/internal/config"
 	"github.com/thoas/go-funk"
 	"github.com/urfave/cli/v2"
 )
@@ -15,28 +16,28 @@ func Unload() cli.ActionFunc {
 		if scriptName == "" {
 			return fmt.Errorf("specify script name")
 		}
-		conf, err := setup.LoadConfig()
+		conf, err := config.LoadConfig()
 		if err != nil {
 			return err
 		}
-		script := funk.Find(conf.InstalledScripts, func(is setup.InstalledScript) bool {
+		script := funk.Find(conf.InstalledScripts, func(is config.InstalledScript) bool {
 			return is.Name == scriptName
 		})
 		if script == nil {
 			return fmt.Errorf("script not found")
 		}
-		err = os.RemoveAll(script.(setup.InstalledScript).Location)
+		err = os.RemoveAll(script.(config.InstalledScript).Location)
 		if err != nil {
 			return err
 		}
-		conf.InstalledScripts = funk.Filter(conf.InstalledScripts, func(is setup.InstalledScript) bool {
+		conf.InstalledScripts = funk.Filter(conf.InstalledScripts, func(is config.InstalledScript) bool {
 			return is.Name != scriptName
-		}).([]setup.InstalledScript)
+		}).([]config.InstalledScript)
 		err = conf.Save()
 		if err != nil {
 			return err
 		}
-		fmt.Printf("Script unloaded [%s]", scriptName)
+		fmt.Printf(internal.InfoColor, fmt.Sprintf("Script unloaded [%s]", scriptName))
 		return nil
 	}
 }

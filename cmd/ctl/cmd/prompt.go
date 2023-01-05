@@ -1,4 +1,4 @@
-package load
+package cmd
 
 import "github.com/manifoldco/promptui"
 

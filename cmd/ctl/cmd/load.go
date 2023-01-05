@@ -1,4 +1,4 @@
-package load
+package cmd
 
 import (
 	"fmt"
@@ -6,7 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/happsie/fivem-loader/internal/setup"
+	"github.com/happsie/fivem-loader/internal"
+	"github.com/happsie/fivem-loader/internal/config"
 	"github.com/happsie/fivem-loader/internal/updater"
 	"github.com/urfave/cli/v2"
 )
@@ -21,7 +22,7 @@ func Load() cli.ActionFunc {
 		if github == "" || !strings.HasPrefix(github, "https://github.com") {
 			return fmt.Errorf("invalid github url")
 		}
-		config, err := setup.LoadConfig()
+		config, err := config.LoadConfig()
 		if err != nil {
 			return err
 		}
@@ -36,11 +37,11 @@ func Load() cli.ActionFunc {
 		if err != nil {
 			return err
 		}
-		err = scriptUpdater.Update(scriptName, github, selectedFolder, ctx.Bool("skip-cfg"))
+		err = scriptUpdater.Update(scriptName, github, selectedFolder, ctx.Bool("skip-cfg"), false)
 		if err != nil {
 			return err
 		}
-		fmt.Println("Script installation complete")
+		fmt.Printf(internal.InfoColor, fmt.Sprintf("Installation of script [%s] complete\n", scriptName))
 		return nil
 	}
 }

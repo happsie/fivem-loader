@@ -1,4 +1,4 @@
-package setup
+package config
 
 import (
 	"encoding/json"
@@ -10,9 +10,11 @@ import (
 )
 
 type InstalledScript struct {
-	Name     string `json:"name"`
-	Github   string `json:"github"`
-	Location string `json:"location"`
+	Name           string `json:"name"`
+	Github         string `json:"github"`
+	Location       string `json:"location"`
+	ResourceFolder string `json:"resourceFolder"`
+	SkippedConfig  bool   `json:"skippedConfig"`
 }
 
 type Config struct {
@@ -56,7 +58,7 @@ func CreateConfig(path string) error {
 	}
 	defer f.Close()
 	conf := Config{
-		ServerDataPath: path,
+		ServerDataPath:   path,
 		InstalledScripts: []InstalledScript{},
 	}
 	err = conf.Save()

@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/happsie/fivem-loader/internal/setup"
+	"github.com/happsie/fivem-loader/internal/config"
 	"github.com/thoas/go-funk"
 )
 
@@ -17,18 +17,18 @@ type ScriptUpdater struct {
 }
 
 // Update takes scriptName (name of the script), url (github url) and destination folder (the resource folder to place the script in e.g [local])
-func (su *ScriptUpdater) Update(scriptName, url, destinationFolder string, skipConfig bool) error {
+func (su *ScriptUpdater) Update(scriptName, url, destinationFolder string, skipConfig, forceUpdate bool) error {
 	if su.ServerDataPath == "" {
 		return fmt.Errorf("server data path not setup, try setting it up before loading scripts")
 	}
-	conf, err := setup.LoadConfig()
+	conf, err := config.LoadConfig()
 	if err != nil {
 		return err
 	}
-	alreadyInstalled := funk.Contains(conf.InstalledScripts, func(is setup.InstalledScript) bool {
+	alreadyInstalled := funk.Contains(conf.InstalledScripts, func(is config.InstalledScript) bool {
 		return is.Name == scriptName && strings.Contains(is.Location, destinationFolder)
 	})
-	if alreadyInstalled {
+	if alreadyInstalled && !forceUpdate {
 		return fmt.Errorf("script already installed with name %s", scriptName)
 	}
 	zipName, err := DownloadZip(getGithubLink(url))
@@ -43,11 +43,16 @@ func (su *ScriptUpdater) Update(scriptName, url, destinationFolder string, skipC
 	if skipConfig == false {
 		su.updateServerCfg(scriptName)
 	}
-	conf.InstalledScripts = append(conf.InstalledScripts, setup.InstalledScript{
-		Name:     scriptName,
-		Github:   url,
-		Location: filepath.Join(su.getResourcesPath(destinationFolder), scriptName),
-	})
+	// Lets skip writing a new entry to the config if we are force updating an already installed script
+	if !forceUpdate {
+		conf.InstalledScripts = append(conf.InstalledScripts, config.InstalledScript{
+			Name:           scriptName,
+			Github:         url,
+			Location:       filepath.Join(su.getResourcesPath(destinationFolder), scriptName),
+			ResourceFolder: destinationFolder,
+			SkippedConfig:  skipConfig,
+		})
+	}
 	err = conf.Save()
 	if err != nil {
 		return err

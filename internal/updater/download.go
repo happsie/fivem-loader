@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/happsie/fivem-loader/internal"
 )
 
 func DownloadZip(url string) (zipName string, err error) {
@@ -14,20 +16,18 @@ func DownloadZip(url string) (zipName string, err error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Printf("Download complete [%s]\n", url)
+	fmt.Printf(internal.InfoColor, fmt.Sprintf("Download of resource [%s] complete\n", url))
 	defer resp.Body.Close()
 	fileName := getFileName()
 	out, err := createZipFile(fileName)
 	if err != nil {
 		return "", err
 	}
-	fmt.Printf("Zipfile created [%s]\n", fileName)
 	defer out.Close()
 	err = copyToFile(out, resp.Body)
 	if err != nil {
 		return "", err
 	}
-	fmt.Printf("Content written to file [%s]\n", fileName)
 	return fileName, nil
 }
 
