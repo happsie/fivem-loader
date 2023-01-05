@@ -31,7 +31,7 @@ func (su *ScriptUpdater) Update(scriptName, url, destinationFolder string, skipC
 	if alreadyInstalled && !forceUpdate {
 		return fmt.Errorf("script already installed with name %s", scriptName)
 	}
-	zipName, err := DownloadZip(getGithubLink(url))
+	zipName, err := DownloadZip(url)
 	if err != nil {
 		return err
 	}
@@ -88,8 +88,4 @@ func (su ScriptUpdater) getCfgPath() string {
 		return fmt.Sprintf(`%sserver.cfg`, su.ServerDataPath)
 	}
 	return fmt.Sprintf(`%s\server.cfg`, su.ServerDataPath)
-}
-
-func getGithubLink(url string) string {
-	return fmt.Sprintf("%s/archive/refs/heads/master.zip", url)
 }

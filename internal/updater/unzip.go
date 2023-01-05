@@ -18,12 +18,10 @@ func Unzip(resourceTargetDirectory, scriptName, zipName string) error {
 	}
 	defer archive.Close()
 
-	folderName := ""
+	folderName := strings.ReplaceAll(zipName, ".zip", "")
 	fmt.Printf(internal.InfoColor, fmt.Sprintf("Installing script [%s] to %s\n", scriptName, resourceTargetDirectory))
+
 	for _, f := range archive.File {
-		if f.FileInfo().IsDir() && folderName == "" && strings.HasSuffix(f.Name, "-master/") {
-			folderName = f.Name
-		}
 		filePath := filepath.Join(resourceTargetDirectory, f.Name)
 
 		if f.FileInfo().IsDir() {
@@ -59,11 +57,9 @@ func Unzip(resourceTargetDirectory, scriptName, zipName string) error {
 	if err != nil {
 		return err
 	}
-	if folderName != "" {
-		err = os.Rename(filepath.Join(resourceTargetDirectory, folderName), filepath.Join(resourceTargetDirectory, scriptName))
-		if err != nil {
-			return err
-		}
+	err = os.Rename(filepath.Join(resourceTargetDirectory, folderName), filepath.Join(resourceTargetDirectory, scriptName))
+	if err != nil {
+		return err
 	}
 	return nil
 }

@@ -3,10 +3,9 @@ package updater
 import (
 	"fmt"
 	"io"
-	"math/rand"
+	"mime"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/happsie/fivem-loader/internal"
 )
@@ -18,7 +17,11 @@ func DownloadZip(url string) (zipName string, err error) {
 	}
 	fmt.Printf(internal.InfoColor, fmt.Sprintf("Download of resource [%s] complete\n", url))
 	defer resp.Body.Close()
-	fileName := getFileName()
+	_, params, err := mime.ParseMediaType(resp.Header.Get("content-disposition"))
+	if err != nil {
+		return "", err
+	}
+	fileName := params["filename"]
 	out, err := createZipFile(fileName)
 	if err != nil {
 		return "", err
@@ -52,10 +55,4 @@ func copyToFile(file *os.File, body io.ReadCloser) error {
 		return fmt.Errorf("no bytes written to disk")
 	}
 	return nil
-}
-
-func getFileName() string {
-	randomNames := []string{"panda", "bear", "duck", "lion", "dog", "cat"}
-	rand.Seed(time.Now().Unix())
-	return fmt.Sprintf("%s.zip", randomNames[rand.Intn(len(randomNames)-0)+0])
 }

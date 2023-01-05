@@ -28,9 +28,8 @@ func main() {
 				Usage: "Loads script to selected resource and ensures script in server.cfg",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
-						Name:     "github",
-						Aliases:  []string{"g"},
-						Usage:    "Link to github repository containing script. (example: https://github.com/happsie/fivem-hello-world)",
+						Name:     "url",
+						Usage:    "URL to github repository or other source containing the script. (example: https://github.com/happsie/fivem-hello-world)",
 						Required: true,
 					},
 					&cli.StringFlag{
@@ -87,6 +86,7 @@ func main() {
 			Name: "happsie",
 		},
 	}
+	app.Version = "v1.2"
 	app.Usage = "Fast and easy installation of scripts"
 	app.Description = "A cli application for installing FiveM scripts"
 	if err := app.Run(os.Args); err != nil {

@@ -13,7 +13,7 @@
 * Places the script in selected resource folder
 * Adds `ensure {script_name}` to `server.cfg`
 
-## 🔭Usage
+## 🔭Usage (see respective relase version for available commands for your version)
 ### ⚡ Command-line commands
 * **help**
 ```
@@ -24,11 +24,17 @@ help
 ```
 setup --server-data-path C:\Users\fivem\server-data
 ``` 
-* **Load a new script**  
+* **Load a new script (Github)**  
 This will download the **master** branch as a zip and extract them into selected resource destination. Make sure the repository is set to public and is following the [supported project structure](#Compatible-repositories)  
 Use `--skip-cfg` to skip making changes to your `server.cfg`
 ```
-load --github https://github.com/happsie/fivem-hello-world --script-name hello_world
+load --url https://github.com/happsie/fivem-hello-world --script-name hello_world
+```
+* **Load a new script (alternative source)**
+This will download source and extract them into selected resource destination. The download must be a `.zip` file [supported project structure](#Compatible-repositories)  
+Use `--skip-cfg` to skip making changes to your `server.cfg`. See below example
+```
+load --url http://drive.google.com/uc?export=download&id={your_file_id} --script-name hello_world
 ```
 * **See loaded scripts by FiveM-loader**  
 ```

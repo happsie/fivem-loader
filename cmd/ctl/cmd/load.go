@@ -18,9 +18,9 @@ func Load() cli.ActionFunc {
 		if scriptName == "" {
 			return fmt.Errorf("script name cannot be empty")
 		}
-		github := ctx.String("github")
-		if github == "" || !strings.HasPrefix(github, "https://github.com") {
-			return fmt.Errorf("invalid github url")
+		url := getUrl(ctx.String("url"))
+		if url == "" {
+			return fmt.Errorf("invalid url")
 		}
 		config, err := config.LoadConfig()
 		if err != nil {
@@ -37,7 +37,7 @@ func Load() cli.ActionFunc {
 		if err != nil {
 			return err
 		}
-		err = scriptUpdater.Update(scriptName, github, selectedFolder, ctx.Bool("skip-cfg"), false)
+		err = scriptUpdater.Update(scriptName, url, selectedFolder, ctx.Bool("skip-cfg"), false)
 		if err != nil {
 			return err
 		}
@@ -58,4 +58,11 @@ func getResourceFolders(path string) ([]string, error) {
 		}
 	}
 	return folderNames, nil
+}
+
+func getUrl(url string) string {
+	if strings.Contains(url, "github.com") {
+		return fmt.Sprintf("%s/archive/refs/heads/master.zip", url)
+	}
+	return url
 }
