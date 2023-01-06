@@ -36,7 +36,7 @@ func main() {
 						Name:     "script-name",
 						Aliases:  []string{"name", "sn"},
 						Usage:    "Name of the script that will also be used for creating the resource folder. (example: hello_world)",
-						Required: true,
+						Required: false,
 					},
 					&cli.BoolFlag{
 						Name:     "skip-cfg",

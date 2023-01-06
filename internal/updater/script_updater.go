@@ -36,22 +36,25 @@ func (su *ScriptUpdater) Update(scriptName, url, destinationFolder string, skipC
 		return err
 	}
 	defer RemoveFile(zipName)
-	err = Unzip(su.getResourcesPath(destinationFolder), scriptName, zipName)
+	unzippedScripts, err := Unzip(su.getResourcesPath(destinationFolder), scriptName, zipName)
 	if err != nil {
 		return err
 	}
-	if skipConfig == false {
-		su.updateServerCfg(scriptName)
-	}
 	// Lets skip writing a new entry to the config if we are force updating an already installed script
 	if !forceUpdate {
-		conf.InstalledScripts = append(conf.InstalledScripts, config.InstalledScript{
-			Name:           scriptName,
-			Github:         url,
-			Location:       filepath.Join(su.getResourcesPath(destinationFolder), scriptName),
-			ResourceFolder: destinationFolder,
-			SkippedConfig:  skipConfig,
-		})
+		for _, unzipped := range unzippedScripts.scripts {
+			fmt.Println(unzipped)
+			if skipConfig == false {
+				su.updateServerCfg(unzipped)
+			}
+			conf.InstalledScripts = append(conf.InstalledScripts, config.InstalledScript{
+				Name:           unzipped,
+				Github:         url,
+				Location:       filepath.Join(su.getResourcesPath(destinationFolder), unzipped),
+				ResourceFolder: destinationFolder,
+				SkippedConfig:  skipConfig,
+			})
+		}
 	}
 	err = conf.Save()
 	if err != nil {

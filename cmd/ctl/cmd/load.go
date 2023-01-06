@@ -15,9 +15,6 @@ import (
 func Load() cli.ActionFunc {
 	return func(ctx *cli.Context) error {
 		scriptName := ctx.String("script-name")
-		if scriptName == "" {
-			return fmt.Errorf("script name cannot be empty")
-		}
 		url := getUrl(ctx.String("url"))
 		if url == "" {
 			return fmt.Errorf("invalid url")
@@ -41,7 +38,7 @@ func Load() cli.ActionFunc {
 		if err != nil {
 			return err
 		}
-		fmt.Printf(internal.InfoColor, fmt.Sprintf("Installation of script [%s] complete\n", scriptName))
+		fmt.Printf(internal.InfoColor, "Installation of script complete\n")
 		return nil
 	}
 }
