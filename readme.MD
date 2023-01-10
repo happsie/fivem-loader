@@ -1,9 +1,6 @@
 <p align="center">
     🌟FiveM Resource Loader - A fast way to install FiveM scripts from Github  🌟  
 </p>
-<p align="center">
-    🚨Work in progress developing an UI and enhancing the command-line tool🚨
-</p>
 
 ## 🖥️ Download
 [Go to releases](https://github.com/happsie/fivem-loader/releases)
@@ -59,12 +56,6 @@ update
 The supported structure for repositories using this tool will be updated to support different kind of repository structures
 
 **only one FiveM-script per repository is currently supported to 100%**
-
-## 🚀Upcoming features
-* Web GUI for installing script
-* List of compatible scripts (easy click-install)
-* Allow private repositories
-* Custom addition to `server.cfg`
 
 ## 🆘Need help?
 [Create an issue](https://github.com/happsie/fivem-loader/issues) 
